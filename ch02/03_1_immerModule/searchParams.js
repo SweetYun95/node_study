@@ -15,10 +15,12 @@ console.log(myURL.searchParams.values())
 console.log('키 / 값 , 추가 제거----------------------------------')
 myURL.searchParams.append('filter','es3')
 console.log(myURL.searchParams.getAll('filter'))
+//제거
+myURL.searchParams.delete('filter')
+console.log(myURL.searchParams.get('filter'))
 
-
-
-
+//searchParams객체를 문자열로
+console.log(myURL.searchParams.toString())
 
 
 
