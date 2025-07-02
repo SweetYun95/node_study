@@ -1,7 +1,5 @@
 import { odd, even } from './ment.mjs'
 
-
-
 // 홀짝 판단
 function checkOddOrEven(num) {
    if (num % 2 === 0) {
