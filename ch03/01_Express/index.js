@@ -2,7 +2,7 @@ const express = require('express')
 require('dotenv').config() // env파일을 사용하기 위한 라이브러리 로드
 
 const app = express()
-app.set('port', 8000) // 포트번호
+app.set('port', process.env.PORT || 3000) // 포트번호
 
 /*
 post : 데이터를 생성해줘
