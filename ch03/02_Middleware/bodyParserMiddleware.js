@@ -17,10 +17,10 @@ app.get('/', (req, res) => {
 
 // form tag의 method = 'post' 이므로 app.post()로 실행한다
 app.post('/submit', (req, res) => {
-    // request + response 할 때는 header + body 형태로 데이터가 전송된다
-    // header : req, res 정보가 들어잇음
-    // body : 데이터가 들어있음
-   console.log(req.headers) // 
+   // request + response 할 때는 header + body 형태로 데이터가 전송된다
+   // header : req, res 정보가 들어잇음
+   // body : 데이터가 들어있음
+   console.log(req.headers) //
    console.log(req.body) // form tag에서 입력한 데이터 출력
    res.send(`데이터 수신 완료!`)
 })

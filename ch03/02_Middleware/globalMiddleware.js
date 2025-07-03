@@ -11,7 +11,7 @@ app.use((req, res, next) => {
    // res: 응답에 대한 정보가 들어있는 객체
    console.log(`${req.method} , ${req.url}`)
    console.log(`미들웨어 1실행`)
-   next() // 다음(response)으로 이동해주는 콜백함수로 이동 
+   next() // 다음(response)으로 이동해주는 콜백함수로 이동
 })
 
 app.use((req, res, next) => {
