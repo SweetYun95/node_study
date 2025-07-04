@@ -10,7 +10,7 @@ app.use(
    session({
       name: 'my-session-cookie', // 세션 id를 저장하는 쿠키의 이름(자유롭게 지정가능)
       secret: 'your-secret-key', // 세션을 암호화 하는 키(자유롭게 지정가능)
-       resave: false, // 세션 데이터가 바뀌지 않아도 저장소(백엔드 서버 RAM메모리)에 다시 저장할지 여부
+      resave: false, // 세션 데이터가 바뀌지 않아도 저장소(백엔드 서버 RAM메모리)에 다시 저장할지 여부
       // 초기화 되지 않는 세션이란? req.session 으로 세션객체는 생성됬지만 그안에 어떤 정보도 들어가 있지 않은 상태
       saveUninitialized: false, // 초기화되지 않은 세션을 저장할지 여부
       cookie: {
@@ -31,26 +31,25 @@ app.get('/set-session', (req, res) => {
 
 //세션 값 확인
 app.get('/get-session', (req, res) => {
-    console.log(req.session)
-    const { username, role } = req.session
-    if (username && role) {
-        res.send(`username: ${username}, role: ${role}, 세션 id: ${req.sessionID}`)
-
-    } else {
-        res.send(`세션 찾을 수 없음`)
-    }
+   console.log(req.session)
+   const { username, role } = req.session
+   if (username && role) {
+      res.send(`username: ${username}, role: ${role}, 세션 id: ${req.sessionID}`)
+   } else {
+      res.send(`세션 찾을 수 없음`)
+   }
 })
 
 //세션 값 삭제
 app.get('/destroy-session', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            res.send(`세션 삭제 실패: ${err.message}`)
-        } else {
-            res.send(`세션 삭제!`)
-            console.log(req.session)
-        }
-    })
+   req.session.destroy((err) => {
+      if (err) {
+         res.send(`세션 삭제 실패: ${err.message}`)
+      } else {
+         res.send(`세션 삭제!`)
+         console.log(req.session)
+      }
+   })
 })
 
 app.listen(app.get('port'), () => {

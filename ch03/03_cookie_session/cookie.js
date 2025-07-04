@@ -24,18 +24,18 @@ app.get('/set-cookie', (req, res) => {
 
 // 쿠키 일기
 app.get('/get-cookie', (req, res) => {
-    console.log('cookies: ', req.cookies) // 일반 쿠키(서명되지 않은 쿠키) 
-    console.log('signed cookies: ', req.signedCookies) // 암호화된 쿠키(서명된 쿠키)
+   console.log('cookies: ', req.cookies) // 일반 쿠키(서명되지 않은 쿠키)
+   console.log('signed cookies: ', req.signedCookies) // 암호화된 쿠키(서명된 쿠키)
 
-    res.send(`쿠키: ${req.cookies.age}, 서명된 쿠키: ${req.signedCookies.user}`)
+   res.send(`쿠키: ${req.cookies.age}, 서명된 쿠키: ${req.signedCookies.user}`)
 })
- 
+
 // 쿠키 삭제
 app.get('/clear-cookie', (req, res) => {
-    // res.clearCookie(키값)
-res.clearCookie('age')
-    res.clearCookie('user')
-    res.send(`쿠키가 삭제되었습니다.`)
+   // res.clearCookie(키값)
+   res.clearCookie('age')
+   res.clearCookie('user')
+   res.send(`쿠키가 삭제되었습니다.`)
 })
 
 app.listen(app.get('port'), () => {
