@@ -16,11 +16,38 @@ app.use(express.urlencoded({ extended: false })) // 클라이언트에서 주는
 // 업로드 폴더 확인 및 생성
 try {
    fs.readdirSync('uploads') // uploads 폴더가 있는지 확인
+   console.log(`uploads 폴더 있음`)
 } catch (error) {
    // 폴더가 없으면 에러 발생
    console.log(`uploads 폴더 없음, 폴더를 생성합니다.`)
    fs.mkdirSync(`uploads`) // uploads 폴더생성
 }
+
+const upload = multer({
+   storage: multer.diskStorage({
+      // 업로드 파일 저장 경로 설정
+      destination(req, file, done) {
+         done(null, 'uploads/') // uploads 폴더에 저장
+      },
+      // 저장할 파일 이름 설정
+      filename(req, file, done) {
+         const ext = path.extname(file.originalname) // 파일 확장자 추출
+         done(null, path.basename(file.originalname, ext) + Date.now() + ext) // 어떤 파일명으로 저장할지 지정
+      },
+   }),
+   limits: { fieldSize: 5 * 1024 * 1024 }, // 업로드 파일 크기 제한(5MB)
+})
+
+// http://localhost:8000/upload 에서 보여주는 화면
+app.get('/upload', (req, res) => {
+   res.sendFile(path.join(__dirname, 'multipart.html'))
+})
+
+// name = 'image' 인 파일 하나만 upload
+app.post('/upload', upload.single(`image`), (req, res) => {
+   console.log(req.file) // 업로드된 파일 정보 출력
+   res.send(`파일 업로드 완료`)
+})
 
 app.listen(app.get('port'), () => {
    console.log(`서버가 작동 중 입니다. http://localhost:${app.get('port')}`)
