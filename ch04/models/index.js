@@ -3,6 +3,10 @@ const dotenv = require('dotenv')
 
 const User = require('./user')
 const Comment = require('./comment')
+const Country = require('./country')
+const Capital = require('./capital')
+const Post = require('./post')
+const Hashtag = require('./hashtag')
 
 // .env에서 현재 실행환경(development, test, production 중 하나)가져옴
 const env = process.env.NODE_ENV || 'development'
@@ -21,14 +25,26 @@ db.sequelize = sequelize
 // User, Comment 모델을 db 객체에 추가
 db.User = User
 db.Comment = Comment
+db.Country = Country
+db.Capital = Capital
+db.Post = Post
+db.Hashtag = Hashtag
 
 // 모델 초기화후 db 연결
 User.init(sequelize)
 Comment.init(sequelize)
+Country.init(sequelize)
+Capital.init(sequelize)
+Post.init(sequelize)
+Hashtag.init(sequelize)
 
 // 모델간의 관계설정 (외래키, 연관테이블 등)
 User.associate(db)
 Comment.associate(db)
+Country.associate(db)
+Capital.associate(db)
+Post.associate(db)
+Hashtag.associate(db)
 
 // db 객체를 내보냄
 module.exports = db
