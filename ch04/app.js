@@ -8,7 +8,6 @@ require('dotenv').config()
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
 const commentsRouter = require('./routes/comments')
-const { error } = require('console')
 
 const app = express()
 app.set('port', process.env.PORT || 3000)
@@ -35,7 +34,6 @@ app.use('/users', usersRouter)
 app.use('/comments', commentsRouter)
 
 // 에러처리 미들웨어
-
 // 요청 경로에 해당하는 라우터가 없을때
 app.use((req, res, next) => {
    const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`)
