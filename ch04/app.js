@@ -15,7 +15,7 @@ app.set('port', process.env.PORT || 3000)
 
 // db 연결 설정
 sequelize
-   .sync({ force: false })// dbd에 이미 존재하는 테이블을 삭제하고 새로 생성할지 여부 -> 안함
+   .sync({ force: false }) // dbd에 이미 존재하는 테이블을 삭제하고 새로 생성할지 여부 -> 안함
    .then(() => {
       console.log(`db 연결 성공`)
    })

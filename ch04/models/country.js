@@ -21,10 +21,10 @@ module.exports = class Country extends Sequelize.Model {
          }
       )
    }
-    static associate(db) {
-        db.Country.hasOne(db.Capital, {
-           foreignKey: 'country_id', // 외래키 컬럼명
-           sourceKey: `id`, // 부모 테이블에서 참조할 컬럼명
-        })
+   static associate(db) {
+      db.Country.hasOne(db.Capital, {
+         foreignKey: 'country_id', // 외래키 컬럼명
+         sourceKey: `id`, // 부모 테이블에서 참조할 컬럼명
+      })
    }
 }

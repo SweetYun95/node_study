@@ -17,7 +17,7 @@ module.exports = class Capital extends Sequelize.Model {
             tableName: `capitals`, // DB에서 사용하는 실제 테이블 이름
             paranoid: false, // 소프트 삭제 활성화 여부(deleteAt 컬럼 생성) -> 비활성화
             charset: 'utf8mb4', // 데이터베이스 생성할 때 charset과 똑같이 사용
-            collate: 'utf8mb4_general_ci', // 데이터베이스 생성할때 collate과 똑같이 사용}
+            collate: 'utf8mb4_general_ci', // 데이터베이스 생성할때 collate과 똑같이 사용
          }
       )
    }
