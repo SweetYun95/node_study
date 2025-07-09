@@ -34,7 +34,7 @@ module.exports = class User extends Sequelize.Model {
             create_at: {
                type: Sequelize.DATE, // 날짜와 시간을 저장하는 datetime
                allowNull: false, // null 제약조건 -> not null,
-               defaultValue: sequelize.NOW, // 디폴트값
+               defaultValue: Sequelize.NOW, // 디폴트값
             },
          },
          {

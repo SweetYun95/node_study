@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
    try {
       const user = await User.findAll({
-         where: { id: req.params.idd },
+         where: { id: req.params.id },
       })
       console.log(`users: ${user}`)
       res.status(200).json(users)
