@@ -1,14 +1,13 @@
 import { TextField, Button, Container, Typography, CircularProgress } from '@mui/material'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 function Login() {
-const [email, setEmail] = useState('') // 이메일
-const [password, setPassword] = useState('') // 패스워드
+   const [email, setEmail] = useState('') // 이메일
+   const [password, setPassword] = useState('') // 패스워드
 
-    // 로그인 버튼 눌렀을 때
-    const handleLogin = (e) => {
-        
-    }
+   // 로그인 버튼 눌렀을 때
+   const handleLogin = (e) => {}
 
    return (
       <Container maxWidth="sm">
@@ -44,7 +43,9 @@ const [password, setPassword] = useState('') // 패스워드
             </Button> */}
          </form>
 
-         <p>계정이 없으신가요? 회원가입</p>
+         <p>
+            계정이 없으신가요? <Link to="/sigup">회원가입</Link>
+         </p>
       </Container>
    )
 }

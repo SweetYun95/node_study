@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser') // 쿠키 처리 미들웨어
 const morgan = require('morgan') // HTTP 요청 로깅 미들웨어
 const session = require('express-session') // 세션 관리 미들웨어
 require('dotenv').config() // 환경 변수 관리
+const cors = require(`cors`) // cors 미들웨어 -> ★api 서버는 반드시 설정
 
 // 라우터 및 기타 모듈 불러오기
 const indexRouter = require(`./routes/index`)
@@ -27,6 +28,12 @@ sequelize
    })
 
 //미들웨어 설정
+app.use(
+   cors({
+      origin: `http://localhost:5173`, // 특정 주소만 request 허용(프론트엔드 주소)
+      credentials: true, // 쿠키, 세션 등 인증 정보 허용
+   })
+)
 app.use(morgan(`dev`))
 app.use(express.static(path.join(__dirname, `uploads`)))
 app.use(express.json()) // JSON 데이터 파싱
@@ -62,7 +69,7 @@ app.use((req, res, next) => {
 
 // 에러 미들웨어
 app.use((err, req, res, next) => {
-   console.error(error)
+   console.error(err)
 
    const statusCode = err.status || 500
    const errorMessage = err.message || `서버 내부 오류`
@@ -75,6 +82,8 @@ app.use((err, req, res, next) => {
    })
 })
 
+
+// app.options('*', cors()) // 모든 경로에 대한 options 요청을 허용
 app.listen(app.get('port'), () => {
    console.log(`${app.get('port')}번 포트에서 대기중`)
 })

@@ -28,7 +28,7 @@ router.post(`/join`, async (req, res, next) => {
       // 뉴페이스 생성
       const newUser = await User.create({
          email,
-         nink,
+         nick,
          password: hash,
       })
 
