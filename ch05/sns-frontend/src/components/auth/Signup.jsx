@@ -1,7 +1,14 @@
 import { TextField, Button, Container, Typography, CircularProgress } from '@mui/material'
+import { useState } from 'react';
 
 
 function Signup() {
+const [email, setEmail] = useState('') // 이메일
+const [nick, setNick] = useState('') // 닉네임
+const [password, setPassword] = useState('') // 패스워드
+const [confirmPassword, setConfirmPassword] = useState('') // 패스워드 확인
+const [isSignupComplete, setIsSignupComplete] = useState(false) // 회원가입 완료 여부
+
     return (
        <Container maxWidth="sm">
           <Typography variant="h4" gutterBottom>
