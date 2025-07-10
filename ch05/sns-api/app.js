@@ -5,6 +5,13 @@ const morgan = require('morgan') // HTTP 요청 로깅 미들웨어
 const session = require('express-session') // 세션 관리 미들웨어
 require('dotenv').config() // 환경 변수 관리
 
+// 라우터 및 기타 모듈 불러오기
+const indexRouter = require(`./routes/index`)
+const authRouter = require(`./routes/auth`)
+const pageRouter = require(`./routes/page`)
+const postRouter = require(`./routes/post`)
+const userRouter = require(`./routes/user`)
+
 const app = express()
 app.set('port', process.env.PORT || 8002)
 
@@ -30,6 +37,13 @@ app.use(
    })
 )
 
+// 라우터 등록
+app.use(`/`, indexRouter) // localhost:8000/
+app.use(`/auth`, authRouter) // localhost:8000/auth
+app.use(`/page`, pageRouter) // localhost:8000/page
+app.use(`/post`, postRouter) // localhost:8000/post
+app.use(`/user`, userRouter) // localhost:8000/user
+
 // 잘못된 경로 처리
 app.use((req, res, next) => {
    const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`) //에러객체 생성
@@ -39,10 +53,15 @@ app.use((req, res, next) => {
 
 // 에러 미들웨어
 app.use((err, req, res, next) => {
-   const status = err.status || 500
-   const message = err.message || `서버에러`
+   const statusCode = err.status || 500
+   const errorMessage = err.message || `서버 내부 오류`
 
-   res.status(status).send(`<h1> Error ${status}</h1><p>${message}</p>`)
+   // 클라이언트에 에러 json 객체 response
+   res.status(statusCode).json({
+      success: false, // 성공여부(필수값 X)
+      message: errorMessage, // 에러메세지
+      error: err, // 에러 객체
+   })
 })
 
 app.listen(app.get('port'), () => {
