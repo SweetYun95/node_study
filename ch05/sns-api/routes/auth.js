@@ -3,7 +3,7 @@ const bcrypt = require(`bcrypt`)
 const router = express.Router()
 const User = require(`../models/user`)
 
-// 회원가입 localhost:8000/auth
+// 회원가입 localhost:8000/auth/join
 router.post(`/join`, async (req, res, next) => {
    try {
       const { email, nick, password } = req.body
@@ -44,8 +44,8 @@ router.post(`/join`, async (req, res, next) => {
             nick: newUser.nick,
          },
       })
-   } catch (error) {      
-    // 에러발생시 미들웨어로 전달
+   } catch (error) {
+      // 에러발생시 미들웨어로 전달
       error.message = `회원가입 중 오류가 발생했습니다.`
       next(error)
    }
