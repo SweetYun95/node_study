@@ -11,11 +11,20 @@ const authRouter = require(`./routes/auth`)
 const pageRouter = require(`./routes/page`)
 const postRouter = require(`./routes/post`)
 const userRouter = require(`./routes/user`)
+const { sequelize } = require(`./models`)
 
 const app = express()
 app.set('port', process.env.PORT || 8002)
 
 // 시퀄라이즈를 사용한 DB연결
+sequelize
+   .sync({ force: false }) // DB에 이미 존제하는 TABLE 삭제하고 새로 생성할지 여부
+   .then(() => {
+      console.log(`DB 연결 됨`) // 연결 성공
+   })
+   .catch((err) => {
+      console.error(err) // 연결 실패시
+   })
 
 //미들웨어 설정
 app.use(morgan(`dev`))
@@ -53,6 +62,8 @@ app.use((req, res, next) => {
 
 // 에러 미들웨어
 app.use((err, req, res, next) => {
+   console.error(error)
+
    const statusCode = err.status || 500
    const errorMessage = err.message || `서버 내부 오류`
 
