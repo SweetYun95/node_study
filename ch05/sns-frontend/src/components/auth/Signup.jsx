@@ -28,7 +28,7 @@ function Signup() {
          alert(`비밀번호가 일치하지 않습니다!`)
          return
       }
-      
+
       dispatch(registerUserThunk({ email, nick, password }))
          .unwrap()
          .then(() => {
@@ -36,6 +36,8 @@ function Signup() {
             setIsSignupComplete(true)
          })
          .catch(() => {
+            // 회원가입중 에러 발생시
+            // auth.data.error
             console.error(`회원가입 에러: ${error}`)
          })
 

@@ -8,6 +8,7 @@ error = {} -> response: undefined 상태
 ? 로 optional chaining을 사용하면 위와 같은 에러가 발생되지 않는다.
 */
 
+// rejectWithValue(): 에러메시지를 rejected에 action.payload 로 전달
 // 회원가입
 export const registerUserThunk = createAsyncThunk(`auth/registerUser`, async (userData, { rejectWithValue }) => {
    // userData: 회원가입 정보
@@ -40,7 +41,7 @@ const authSlice = createSlice({
          })
          .addCase(registerUserThunk.rejected, (state, action) => {
             state.loading = false
-            state.error = action.payload
+            state.error = action.payload // rejectWithValue
          })
    },
 })
