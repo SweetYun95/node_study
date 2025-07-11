@@ -14,8 +14,10 @@ const pageRouter = require(`./routes/page`)
 const postRouter = require(`./routes/post`)
 const userRouter = require(`./routes/user`)
 const { sequelize } = require(`./models`)
+const passportConfig = require(`./passport/index`)
 
 const app = express()
+passportConfig()
 app.set('port', process.env.PORT || 8002)
 
 // 시퀄라이즈를 사용한 DB연결
@@ -58,7 +60,6 @@ app.use(
 app.use(passport.initialize()) // 초기화
 app.use(passport.session()) // passport와 생성해둔 세션 연결
 
-
 // 라우터 등록
 app.use(`/`, indexRouter) // localhost:8000/
 app.use(`/auth`, authRouter) // localhost:8000/auth
@@ -87,7 +88,6 @@ app.use((err, req, res, next) => {
       error: err, // 에러 객체
    })
 })
-
 
 // app.options('*', cors()) // 모든 경로에 대한 options 요청을 허용
 app.listen(app.get('port'), () => {

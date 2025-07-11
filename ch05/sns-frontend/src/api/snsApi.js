@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { trace } from '../../../sns-api/routes/auth'
 
 const BASE_URL = import.meta.env.VITE_APP_API_URL
 
@@ -21,10 +20,10 @@ const snsApi = axios.create({
 export const registerUser = async (userData) => {
    try {
       // userData: 회원가입 창에서 입력한 데이터
-       // localhost:8000/auth/join
-       console.log(`userData: ${userData}`)
-       const response = await snsApi.post(`/auth/join`, userData)
-       console.log(`response: ${response}`)
+      // localhost:8000/auth/join
+      console.log(`userData`, userData)
+      const response = await snsApi.post(`/auth/join`, userData)
+      console.log(`response:`, response)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -32,17 +31,15 @@ export const registerUser = async (userData) => {
    }
 }
 
-
-
 // 로그인
-export const loginUser = async(credential) => {
+export const loginUser = async (credential) => {
    try {
-      console.log(`credential: ${credential}`)
-      const response = await snsApi.post(`/auth.login`, credential)
-      console.log(`response: ${response}`)
+      console.log(`credential`, credential)
+      const response = await snsApi.post(`/auth/login`, credential)
+      console.log(`response:`, response)
       return response
    } catch (error) {
-      console.error(`API Request 오류 ${error}`)
+      console.error(`API Request 오류:`, error)
       throw error
    }
 }
@@ -50,11 +47,11 @@ export const loginUser = async(credential) => {
 // 로그아웃
 export const logoutUser = async () => {
    try {
-      const response =await snsApi.get(`/auth/logout`)
+      const response = await snsApi.get(`/auth/logout`)
       return response
    } catch (error) {
-        console.error(`API Request 오류 ${error}`)
-        throw error
+   console.error(`API Request 오류:`, error)
+      throw error
    }
 }
 
@@ -64,7 +61,7 @@ export const checkAuthStatus = async () => {
       const response = await snsApi.get(`/auth/status`)
       return response
    } catch (error) {
-      console.error(`API Request 오류 ${error}`)
+   console.error(`API Request 오류:`, error)
       throw error
    }
 }

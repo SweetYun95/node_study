@@ -1,13 +1,29 @@
 import { TextField, Button, Container, Typography, CircularProgress } from '@mui/material'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginUserThunk } from '../../features/authSlice'
 
 function Login() {
    const [email, setEmail] = useState('') // 이메일
    const [password, setPassword] = useState('') // 패스워드
+   const dispatch = useDispatch()
+   const navigate = useNavigate()
+   const { loading, error } = useSelector((state) => state.auth)
 
    // 로그인 버튼 눌렀을 때
-   const handleLogin = (e) => {}
+   const handleLogin = (e) => {
+      e.preventDefault()
+      if (!email.trim() || !password.trim()) {
+         alert(`이메일과 패스워드를 입력해 주세요`)
+         return
+      }
+
+      dispatch(loginUserThunk({ email, password }))
+         .unwrap()
+         .then(() => navigate(`/`)) // 로그인 성공시 메인페이지로 이동
+         .catch((error) => console.error(`로그인 실패: ${error}`))
+   }
 
    return (
       <Container maxWidth="sm">
@@ -15,18 +31,18 @@ function Login() {
             로그인
          </Typography>
 
-         {/* {error && (
+         {error && (
             <Typography color="error" align="center">
                {error}
             </Typography>
-         )} */}
+         )}
 
          <form onSubmit={handleLogin}>
             <TextField label="이메일" name="email" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
 
             <TextField label="비밀번호" type="password" name="password" fullWidth margin="normal" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-            {/* <Button variant="contained" color="primary" type="submit" fullWidth disabled={loading} sx={{ position: 'relative', marginTop: '20px' }}>
+            <Button variant="contained" color="primary" type="submit" fullWidth disabled={loading} sx={{ position: 'relative', marginTop: '20px' }}>
                {loading ? (
                   <CircularProgress
                      size={24}
@@ -40,7 +56,7 @@ function Login() {
                ) : (
                   '로그인'
                )}
-            </Button> */}
+            </Button>
          </form>
 
          <p>

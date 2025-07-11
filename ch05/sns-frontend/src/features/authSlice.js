@@ -25,9 +25,8 @@ export const loginUserThunk = createAsyncThunk(`auth/loginUserThunk`, async (cre
    try {
       const response = await loginUser(credentials)
       return response.data.user
-      
    } catch (error) {
-       return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message)
    }
 })
 
@@ -52,7 +51,6 @@ export const checkAuthStatusThunk = createAsyncThunk(`auth/checkAuthStatusThunk`
    }
 })
 
-
 const authSlice = createSlice({
    name: 'auth',
    initialState: {
@@ -64,6 +62,7 @@ const authSlice = createSlice({
    reducers: {},
    extraReducers: (builder) => {
       builder
+         //회원가입
          .addCase(registerUserThunk.pending, (state) => {
             state.loading = true
             state.error = null
@@ -75,6 +74,51 @@ const authSlice = createSlice({
          .addCase(registerUserThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload // rejectWithValue
+         })
+         // 로그인
+         .addCase(loginUserThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(loginUserThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.isAuthenticated = true
+            state.user = action.payload
+         })
+         .addCase(loginUserThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 로그아웃
+         .addCase(logoutUserThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(logoutUserThunk.fulfilled, (state) => {
+            state.loading = false
+            state.isAuthenticated = false
+            state.user = null // 로그아웃 후 유저 정보 초기화
+         })
+         .addCase(logoutUserThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 로그인 상태 확인
+         .addCase(checkAuthStatusThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(checkAuthStatusThunk.fulfilled, (state, action) => {
+            state.loading = false
+            // 로그인이 어떤 상태인지 모르기 때문에 아래와 같이 설정
+            state.isAuthenticated = action.payload.isAuthenticated
+            state.user = action.payload.user || null
+         })
+         .addCase(checkAuthStatusThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+            state.isAuthenticated = false
+            state.user = null
          })
    },
 })

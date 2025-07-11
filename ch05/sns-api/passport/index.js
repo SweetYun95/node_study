@@ -7,7 +7,7 @@ const User = require('../models/user')
 module.exports = () => {
    // 직렬화 (serializeUser) : 로그인 성공후 사용자 정보를 세션에 저장
    passport.serializeUser((user, done) => {
-      console.log(`👦user: ${user}`) // 사용자 정보가 저장되어 있는 객체
+      console.log(`👦user:`, user.toJSON?.() || user) // 사용자 정보가 저장되어 있는 객체
       done(null, user.id) // user 테이블의 id(=PK) 값
    })
 
