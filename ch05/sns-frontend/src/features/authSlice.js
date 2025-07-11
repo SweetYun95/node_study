@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { registerUser } from '../api/snsApi'
+import { loginUser, logoutUser, registerUser } from '../api/snsApi'
 
 /*
 ? : (optional chaining)
@@ -19,6 +19,39 @@ export const registerUserThunk = createAsyncThunk(`auth/registerUser`, async (us
       return rejectWithValue(error.response?.data?.message)
    }
 })
+
+// 로그인
+export const loginUserThunk = createAsyncThunk(`auth/loginUserThunk`, async (credentials, { rejectWithValue }) => {
+   try {
+      const response = await loginUser(credentials)
+      return response.data.user
+      
+   } catch (error) {
+       return rejectWithValue(error.response?.data?.message)
+   }
+})
+
+// 로그아웃
+// _(언더바)는 매개변수 값이 없을 때 사용
+export const logoutUserThunk = createAsyncThunk(`auth/logoutUserThunk`, async (_, { rejectWithValue }) => {
+   try {
+      const response = await logoutUser()
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message)
+   }
+})
+
+// 로그인 상태확인
+export const checkAuthStatusThunk = createAsyncThunk(`auth/checkAuthStatusThunk`, async (_, { rejectWithValue }) => {
+   try {
+      const response = await logoutUser()
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message)
+   }
+})
+
 
 const authSlice = createSlice({
    name: 'auth',
