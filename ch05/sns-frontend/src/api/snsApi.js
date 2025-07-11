@@ -50,7 +50,7 @@ export const logoutUser = async () => {
       const response = await snsApi.get(`/auth/logout`)
       return response
    } catch (error) {
-   console.error(`API Request 오류:`, error)
+      console.error(`API Request 오류:`, error)
       throw error
    }
 }
@@ -61,7 +61,7 @@ export const checkAuthStatus = async () => {
       const response = await snsApi.get(`/auth/status`)
       return response
    } catch (error) {
-   console.error(`API Request 오류:`, error)
+      console.error(`API Request 오류:`, error)
       throw error
    }
 }

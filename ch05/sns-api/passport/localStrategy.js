@@ -9,6 +9,7 @@ module.exports = () => {
       new LocalStrategy(
          {
             // input 태그에서 name으로 사용하는 이름을 지정
+            // req.body={ email:test@test.com, password:1234 }
             usernameField: `email`, // req.body.email = `test@test.com`
             passwordField: `password`, // req.body.password = `1234`
          },
@@ -30,8 +31,8 @@ module.exports = () => {
                      done(null, false, { message: `비밀번호가 일치하지 않습니다.` })
                   }
                } else {
-                   // 3. 해당 이메일이 없는경우 message를 passport에 반환
-                   done(null, false, {message :`없는 아이디 입니다.`})
+                  // 3. 해당 이메일이 없는경우 message를 passport에 반환
+                  done(null, false, { message: `없는 아이디 입니다.` })
                }
             } catch (error) {
                console.error(error)

@@ -1,8 +1,8 @@
 import { TextField, Button, Container, Typography, CircularProgress } from '@mui/material'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { registerUserThunk } from '../../features/authSlice'
+import { registerUserThunk, clearAuthError } from '../../features/authSlice'
 import { __DO_NOT_USE__ActionTypes } from 'redux'
 
 function Signup() {
@@ -15,6 +15,16 @@ function Signup() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const { loading, error } = useSelector((state) => state.auth)
+
+   // 라우터를 사용해 경로가 바뀌면 이젠 컴포넌트는 언마운트가 된다
+   // 이 뒷정리 함수는 컴포넌트가 언마운트 되기 직전에 실행된다
+   // 즉, 컴포넌트가 언마운트 되기전에 error state가 null로 초기화 된다
+   useEffect(() => {
+      // 회원가입 컴포넌트를 벗어날때 error state가 null로 초기화
+      return () => {
+         dispatch(clearAuthError())
+      }
+   }, [dispatch])
 
    // 회원가입 버튼 클릭시 실행
    const handleSignup = () => {

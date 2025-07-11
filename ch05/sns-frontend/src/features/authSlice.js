@@ -59,7 +59,12 @@ const authSlice = createSlice({
       loading: false,
       error: null,
    },
-   reducers: {},
+   reducers: {
+      // error state 초기화 해주는 함수
+      clearAuthError: (state) => {
+         state.error =null
+      }
+   },
    extraReducers: (builder) => {
       builder
          //회원가입
@@ -124,3 +129,4 @@ const authSlice = createSlice({
 })
 
 export default authSlice.reducer
+export const {clearAuthError} = authSlice.actions
