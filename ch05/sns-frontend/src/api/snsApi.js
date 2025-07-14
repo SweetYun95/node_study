@@ -26,7 +26,7 @@ export const registerUser = async (userData) => {
       console.log(`response:`, response)
       return response
    } catch (error) {
-      console.error(`API Request 오류: ${error.message}`)
+    console.error(`API Request 오류:`, error)
       throw error
    }
 }
@@ -81,7 +81,7 @@ export const createPost = async (postData) => {
       const response = await snsApi.post('/post', postData, config) // 마지막에 config 추가
       return response
    } catch (error) {
-      console.error(`API Request 오류: ${error}`)
+    console.error(`API Request 오류:`, error)
       throw error
    }
 }
