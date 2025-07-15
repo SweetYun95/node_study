@@ -26,7 +26,7 @@ export const registerUser = async (userData) => {
       console.log(`response:`, response)
       return response
    } catch (error) {
-    console.error(`API Request 오류:`, error)
+      console.error(`API Request 오류:`, error)
       throw error
    }
 }
@@ -81,7 +81,19 @@ export const createPost = async (postData) => {
       const response = await snsApi.post('/post', postData, config) // 마지막에 config 추가
       return response
    } catch (error) {
-    console.error(`API Request 오류:`, error)
+      console.error(`API Request 오류:`, error)
+      throw error
+   }
+}
+
+// 전체 포스트 가져오기(페이징)
+export const getPosts = async (page) => {
+   try {
+      // page:페이지 번호
+      const response = await snsApi.get(`./post?page=${page}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류:`, error)
       throw error
    }
 }

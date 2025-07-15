@@ -1,9 +1,10 @@
 import { TextField, Button, Container, Typography, CircularProgress } from '@mui/material'
+
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+
 import { registerUserThunk, clearAuthError } from '../../features/authSlice'
-import { __DO_NOT_USE__ActionTypes } from 'redux'
 
 function Signup() {
    const [email, setEmail] = useState('') // 이메일
