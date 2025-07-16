@@ -19,7 +19,7 @@ function PostCreatePage() {
          })
          .catch((error) => {
             console.error(`게시물 등록 에러: `, error)
-            alert(`게시물 등록 실패: `, error)
+            alert(`게시물 등록 실패: `+ error)
          })
    }
 
