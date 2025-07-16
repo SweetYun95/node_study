@@ -1,16 +1,17 @@
-import './App.css'
-import './styles/common.css'
+import { Route, Routes } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
 import Navbar from './components/shared/Navbar'
 import Home from './pages/Home'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
 import PostCreatePage from './pages/PostCreatePage'
-
-import { Route, Routes } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import PostEditPage from './pages/PostEditPage'
 import { checkAuthStatusThunk } from './features/authSlice'
+
+import './App.css'
+import './styles/common.css'
 
 function App() {
    const dispatch = useDispatch()
@@ -29,6 +30,7 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/posts/create" element={<PostCreatePage />} />
+            <Route path="/posts/edit/:id" element={<PostEditPage />} />
          </Routes>
       </>
    )

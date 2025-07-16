@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton'
 
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+
 import { logoutUserThunk } from '../../features/authSlice'
 
 function Navbar({ isAuthenticated, user }) {

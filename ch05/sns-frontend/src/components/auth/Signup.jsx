@@ -49,7 +49,7 @@ function Signup() {
          .catch(() => {
             // 회원가입중 에러 발생시
             // auth.data.error
-            console.error(`회원가입 에러: ${error}`)
+            console.error(`회원가입 에러:`, error)
          })
 
       // 회원가입 완료 됨

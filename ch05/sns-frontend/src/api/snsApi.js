@@ -97,3 +97,14 @@ export const getPosts = async (page) => {
       throw error
    }
 }
+
+// 특정 포스트 가져오기
+export const getPostById = async (id) => {
+   try {
+      const response = await snsApi.get(`/post/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류:`, error)
+      throw error
+   }
+}
