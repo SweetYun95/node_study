@@ -18,7 +18,6 @@ function PostItem({ post, isAuthenticated, user }) {
       dispatch(deletePostThunk(id))
          .unwrap()
          .then(() => {
-            // 그냥 navigate만 하면 삭제된 목록이 여전히 보이기 때문에 삭제후 리스트를 새로 불러온다
             navigate('/')
          })
          .catch((error) => {
