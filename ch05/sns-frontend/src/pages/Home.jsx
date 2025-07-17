@@ -1,7 +1,7 @@
 import { Container, Typography, Pagination, Stack } from '@mui/material'
 
-import { fetchPostsThunk } from '../features/postSlice'
 import PostItem from '../components/post/PostItem'
+import { fetchPostsThunk } from '../features/postSlice'
 
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'

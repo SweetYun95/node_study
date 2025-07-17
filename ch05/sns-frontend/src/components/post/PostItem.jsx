@@ -3,12 +3,29 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 
-import { Link } from 'react-router-dom'
 import dayjs from 'dayjs' //날짜 시간 포맷해주는 패키지
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+
+import { deletePostThunk } from '../../features/postSlice'
 
 function PostItem({ post, isAuthenticated, user }) {
+   const dispatch = useDispatch()
+   const navigate = useNavigate()
+
    // 게시물 삭제
-   const onClickDelete = (id) => {}
+   const onClickDelete = (id) => {
+      dispatch(deletePostThunk(id))
+         .unwrap()
+         .then(() => {
+            // 그냥 navigate만 하면 삭제된 목록이 여전히 보이기 때문에 삭제후 리스트를 새로 불러온다
+            navigate('/')
+         })
+         .catch((error) => {
+            console.error(`게시물 삭제중 오류 발생: `, error)
+            alert(`게시물 삭제에 실패 했습니다. `, error)
+         })
+   }
 
    return (
       <Card style={{ margin: '20px 0' }}>

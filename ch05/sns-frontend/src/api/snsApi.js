@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const BASE_URL = import.meta.env.VITE_APP_API_URL
-
+console.log('BASE_URL: ', BASE_URL)
 //axios 인스턴스 생성
 const snsApi = axios.create({
    baseURL: BASE_URL,
@@ -122,6 +122,18 @@ export const updatePost = async (id, postData) => {
       }
 
       const response = await snsApi.put(`/post/${id}`, postData, config)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류:`, error)
+      throw error
+   }
+}
+
+// 포스트 삭제
+export const deletePost = async (id) => {
+   try {
+      // id: 특정 post의 id(PK)
+      const response = await snsApi.delete(`/post/${id}`)
       return response
    } catch (error) {
       console.error(`API Request 오류:`, error)
