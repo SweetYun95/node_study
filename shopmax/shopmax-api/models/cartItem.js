@@ -1,13 +1,9 @@
 const Sequelize = require('sequelize')
 
-module.exports = class OrderItem extends Sequelize.Model {
+module.exports = class CartItem extends Sequelize.Model {
    static init(sequelize) {
       return super.init(
          {
-            orderPrice: {
-               type: Sequelize.INTEGER,
-               allowNull: false,
-            },
             count: {
                type: Sequelize.INTEGER,
                allowNull: false,
@@ -17,8 +13,8 @@ module.exports = class OrderItem extends Sequelize.Model {
             sequelize,
             timestamps: true,
             underscored: false,
-            modelName: 'OrderItem',
-            tableName: 'orderItems',
+            modelName: 'CartItem',
+            tableName: 'cartItems',
             paranoid: false,
             charset: 'utf8mb4',
             collate: 'utf8mb4_general_ci',
@@ -27,7 +23,8 @@ module.exports = class OrderItem extends Sequelize.Model {
    }
 
    static associate(db) {
-      OrderItem.belongsTo(db.Order, { foreignKey: 'orderId', targetKey: 'id', onDelete: 'CASCADE' })
-      OrderItem.belongsTo(db.Item, { foreignKey: 'itemId', targetKey: 'id', onDelete: 'CASCADE' })
+      //1:n관계 설정
+      CartItem.belongsTo(db.Item, { foreignKey: 'itemId', targetKey: 'id', onDelete: 'CASCADE' })
+      CartItem.belongsTo(db.Cart, { foreignKey: 'cartId', targetKey: 'id', onDelete: 'CASCADE' })
    }
 }

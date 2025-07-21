@@ -26,7 +26,12 @@ module.exports = class Order extends Sequelize.Model {
       )
    }
 
-    static associate(db) {
-       Order.belongsTo(db.User, { foreignKey: 'userId', targetKey: 'id', onDelete: 'CASCADE' })
+   static associate(db) {
+      Order.belongsTo(db.User, { foreignKey: 'userId', targetKey: 'id', onDelete: 'CASCADE' })
+
+      // 1:n관계 설정
+      Order.hasMany(db.OrderItem, { foreignKey: 'orderId', sourceKey: 'id', onDelete: 'CASCADE' })
+      // 교차테이블 관계 지정
+      Order.belongsToMany(db.Item, { through: db.OrderItem, foreignKey: 'orderId', otherKey: 'itemId' })
    }
 }

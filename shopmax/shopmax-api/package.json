@@ -1,14 +1,15 @@
 {
    "name": "shopmax-api",
    "version": "1.0.0",
+   "description": "shopmax api",
+   "license": "ISC",
+   "author": "sweetyun",
+   "type": "commonjs",
    "main": "app.js",
    "scripts": {
-      "start": "nodemon app.js",
+      "start": "nodemon app",
       "test": "echo \"Error: no test specified\" && exit 1"
    },
-   "author": "",
-   "license": "ISC",
-   "description": "shopmax-api",
    "dependencies": {
       "bcrypt": "^6.0.0",
       "cookie-parser": "^1.4.7",

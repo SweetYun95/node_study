@@ -40,5 +40,15 @@ module.exports = class Item extends Sequelize.Model {
 
    static associate(db) {
       Item.hasMany(db.Img, { foreignKey: 'itemId', sourceKey: 'id', onDelete: 'CASCADE' })
+
+      // 1:n관계
+      Item.hasMany(db.OrderItem, { foreignKey: 'itemId', sourceKey: 'id', onDelete: 'CASCADE' })
+      // 교차테이블 관계 설정
+      Item.belongsToMany(db.Order, { through: db.OrderItem, foreignKey: 'itemId', otherKey: 'orderId' })
+
+      // 1:n관계 설정
+      Item.hasMany(db.CartItem, { foreignKey: 'itemId', sourceKey: 'id', onDelete: 'CASCADE' })
+      //교차테이블 관계 설정
+      Item.belongsToMany(db.Cart, { through: db.CartItem, foreignKey: 'itemId', otherKey: 'cartId' })
    }
 }

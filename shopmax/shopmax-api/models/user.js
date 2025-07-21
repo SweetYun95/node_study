@@ -29,11 +29,11 @@ module.exports = class User extends Sequelize.Model {
          },
          {
             sequelize,
-            timestamps: true, //createAt, updateAt ..등 자동 생성
+            timestamps: true, //createdAt, updatedAt ..등 자동 생성
             underscored: false,
             modelName: 'User',
             tableName: 'users',
-            paranoid: false, //deleteAt 사용 X
+            paranoid: false, //deletedAt 사용 X
             charset: 'utf8mb4',
             collate: 'utf8mb4_general_ci',
          }
@@ -43,5 +43,7 @@ module.exports = class User extends Sequelize.Model {
    static associate(db) {
       User.hasMany(db.Domain, { foreignKey: 'userId', sourceKey: 'id', onDelete: 'CASCADE' })
       User.hasMany(db.Order, { foreignKey: 'userId', sourceKey: 'id', onDelete: 'CASCADE' })
+
+      User.hasOne(db.Cart, { foreignKey: 'userId', sourceKey: 'id', onDelete: 'CASCADE' })
    }
 }

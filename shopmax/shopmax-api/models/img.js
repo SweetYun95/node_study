@@ -33,7 +33,7 @@ module.exports = class Img extends Sequelize.Model {
       )
    }
 
-    static associate(db) {
-       Img.belongsTo(db.Item, { foreignKey: 'itemId', targetKey: 'id', onDelete: 'CASCADE' })
+   static associate(db) {
+      Img.belongsTo(db.Item, { foreignKey: 'itemId', targetKey: 'id', onDelete: 'CASCADE' })
    }
 }
