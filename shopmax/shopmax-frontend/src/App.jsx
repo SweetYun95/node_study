@@ -6,6 +6,7 @@ import Footer from './components/shared/Footer'
 import Home from './pages/Home'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
+import ItemCreatePage from './pages/itemCreatePage'
 import { checkAuthStatusThunk } from './features/authSlice'
 
 import './styles/common.css'
@@ -26,6 +27,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/items/create" element={<ItemCreatePage />} />
          </Routes>
          <Footer />
       </>
