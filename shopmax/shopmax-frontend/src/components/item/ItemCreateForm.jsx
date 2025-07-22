@@ -2,7 +2,7 @@ import { TextField, Button, Box, MenuItem, Select, InputLabel, FormControl } fro
 import { useState } from 'react'
 import { formatWithComma, stripComma } from '../../utils/priceSet'
 
-function ItemCreateForm() {
+function ItemCreateForm({ onCreateSubmit }) {
    const [imgUrls, setImgUrls] = useState([]) // 이미지 경로(여러개 저장)
    const [imgFiles, setImgFiles] = useState([]) // 이미지 파일 객체(여러개 저장)
    const [itemNm, setItemNm] = useState('') // 상품명
@@ -19,37 +19,100 @@ function ItemCreateForm() {
       // 업로드된 파일 객체를 배열로 바꾸고 최대 5개까지만 선택
       const newFiles = Array.from(files).slice(0, 5)
       console.log(newFiles)
-      // 선택된 파일 상태 업데이트
+
+      // 선택된 새 파일로 이미지 객체 state 업데이트
       setImgFiles(newFiles)
 
       // 미리보기
+      // newImgUrls = [ new Promise(),  new Promise(), new Promise()]
       const newImgUrls = newFiles.map((file) => {
          const reader = new FileReader()
-         reader.readAsDataURL(file) // file 데이터 읽기
+         reader.readAsDataURL(file) // 파일 데이터 읽기
 
-         // promise 객체를 리턴하여 비동기적으로 FileReader 작업(빠름)
+         // promise 객체를 리턴하여 비동기적으로 FileReader 작업(속도가 빠름)
          return new Promise((resolve) => {
-            // 파일 읽기가 완료 되었을 때 결과를 Promise에 전달
+            // 파일 읽기가 완료 되었을때 결과를 promise에 전달
             // event.target.result: base64로 인코딩된 이미지 url
-            reader.onload = (event) => resolve(event.target.result)
+            reader.onload = (event) => {
+               resolve(event.target.result)
+            }
          })
       })
 
+      // 병렬처리
       Promise.all(newImgUrls).then((urls) => {
-         console.log(`urls: ${urls}`)
-         // 생성된 새 미리보기 URL 상태 업데이트
+         // 생성된 새 미리보기 URL로 상태 업데이트
          setImgUrls(urls)
       })
    }
 
    // 상품 등록
-   const handleSubmit = (e) => {}
+   const handleSubmit = (e) => {
+      e.preventDefault()
 
-   // 가격에서 콤마 제거
-   const handlePriceChange = (e) => {}
+      // 나중에 테이블에 insert 될때를 컬럼의 데이터 타입, 제약조건등을 고려해 사용자가 올바른 값을 입력하도록 해야한다
+
+      if (!itemNm.trim()) {
+         alert('상품명을 입력하세요!')
+         return
+      }
+
+      if (!String(price).trim()) {
+         alert('가격을 입력하세요!')
+         return
+      }
+
+      if (!String(stockNumber).trim()) {
+         alert('재고를 입력하세요.')
+         return
+      }
+
+      if (imgFiles.length === 0) {
+         alert('이미지 최소 1개 이상 업로드 하세요.')
+         return
+      }
+
+      const formData = new FormData()
+      formData.append('itemNm', itemNm)
+      formData.append('price', price)
+      formData.append('stockNumber', stockNumber)
+      formData.append('itemSellStatus', itemSellStatus)
+      formData.append('itemDetail', itemDetail)
+
+      // 이미지 파일 여러개 인코딩 처리(한글 파일명 깨짐 방지) 및 formData에 추가
+      imgFiles.forEach((file) => {
+         const encodedFile = new File([file], encodeURIComponent(file.name), { type: file.type })
+         formData.append('img', encodedFile)
+      })
+
+      // 상품등록 함수 실행
+      onCreateSubmit(formData)
+   }
+
+   // 가격에서 콤마 제거 / 숫자가 아닌 값을 거른 후 => price state에 저장
+   const handlePriceChange = (e) => {
+      const rawValue = e.target.value // 입력된 가격 20,000
+      const numericValue = stripComma(rawValue) // 콤마 제거 20000
+
+      // 숫자가 아닌 값이 입력되면 리턴(유효성 체크)
+      const isNumric = /^\d*$/
+      if (!isNumric.test(numericValue)) return
+
+      // price 컬럼 타입은 int(정수형)이므로 콤마가 붙은 값은 insert할 수 X
+      // 따라서 price state값은 콤마를 제거해 저장한다
+      setPrice(numericValue)
+   }
 
    // 재고입력시 숫자만 입력하도록
-   const handleStockChange = (e) => {}
+   const handleStockChange = (e) => {
+      const rawValue = e.target.value
+
+      // 숫자가 아닌 값이 입력되면 리턴(유효성 체크)
+      const isNumric = /^\d*$/
+      if (!isNumric.test(rawValue)) return
+
+      setStockNumber(rawValue)
+   }
 
    return (
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} encType="multipart/form-data">
