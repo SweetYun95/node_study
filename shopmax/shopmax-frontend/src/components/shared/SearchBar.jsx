@@ -1,6 +1,5 @@
 import { TextField, IconButton, Box } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-
 import { useState } from 'react'
 
 function SearchBar({ onSearch }) {
@@ -10,10 +9,12 @@ function SearchBar({ onSearch }) {
       setSearchTerm(e.target.value)
    }
 
-   // 검색 버튼 눌렀을 때
+   // 검색 버튼 눌렀을때
    const handleSearch = (e) => {
       e.preventDefault()
-      if (onSearch && !searchTerm.trim()) {
+
+      // onSearch가 존재하고 searchTerm 값이 빈 문자열이 아니면
+      if (onSearch && searchTerm.trim()) {
          onSearch(searchTerm.trim())
       }
    }

@@ -1,11 +1,10 @@
 import { Card, CardMedia, CardContent, Typography, Pagination, Box } from '@mui/material'
-
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 
+import { useDispatch, useSelector } from 'react-redux'
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { formatWithComma } from '../../utils/priceSet'
+import { Link } from 'react-router-dom'
 
 function ItemSellList({ searchTerm }) {
    const dispatch = useDispatch()
@@ -30,7 +29,7 @@ function ItemSellList({ searchTerm }) {
    }
 
    return (
-      <Box sx={{ padding: '20pxx' }}>
+      <Box sx={{ padding: '20px' }}>
          {items.length > 0 ? (
             <Box
                sx={{
@@ -50,7 +49,15 @@ function ItemSellList({ searchTerm }) {
                   <Link key={item.id} to={`/items/detail/${item.id}`} style={{ textDecoration: 'none' }}>
                      <Card sx={{ width: '250px' }}>
                         {/* 대표이미지만 가져오기 */}
-                        <CardMedia component="img" height="140" image={''} alt={item.itemNm} />
+                        <CardMedia component="img" height="140" image={`${import.meta.env.VITE_APP_API_URL}${item.Imgs.filter((img) => img.repImgYn === 'Y')[0].imgUrl}`} alt={item.itemNm} />
+                        {/* 
+                           [{
+                            id:35,
+                            oriImgName:"person_3.jpg",
+                            imgUrl:"/person_31736474920385.jpg",
+                            repImgYn:"Y"
+                           }]
+                         */}
                         <CardContent>
                            <Typography variant="h6" component="div">
                               {item.itemNm}
