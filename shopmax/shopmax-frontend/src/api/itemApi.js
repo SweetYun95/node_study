@@ -32,3 +32,14 @@ export const getItem = async (data) => {
       throw error
    }
 }
+
+// 상품삭제
+export const deleteItem = async (id) => {
+   try {
+      const response = await shopmaxApi.delete(`item/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error}`)
+      throw error
+   }
+}

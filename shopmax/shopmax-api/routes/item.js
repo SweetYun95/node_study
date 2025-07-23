@@ -4,6 +4,7 @@ const path = require('path')
 const fs = require('fs')
 const { Op } = require('sequelize')
 const { Item, Img } = require('../models')
+const { tracingChannel } = require('diagnostics_channel')
 const router = express.Router()
 
 // uploads 폴더가 없을 경우 새로 생성
@@ -175,5 +176,36 @@ router.get('/', async (req, res, next) => {
       next(error)
    }
 })
+
+// 상품 삭제 localhost:8000/item/:id
+router.delete('/:id', async (req, res, next) => {
+   try {
+      const id = req.params.id // 상품 id
+
+      // 상품이 있는지 확인
+      const item = await Item.findByPk(id) // pk key 로 검색
+
+      // 상품이 존재하지 않는 경우 확인
+      if (!item) {
+         const error = new Error(`상품을 찾을 수 없습니다.`)
+         error.status = 404
+         return next(error)
+      }
+
+      // 상품삭제(연관된 이미지도 삭제 - CASCADE 설정)
+      await item.destroy()
+
+      res.json({
+         success: true,
+         message: `상품 삭제 완료`,
+      })
+   } catch (error) {
+      error.status = 500
+      error.message = '상품 삭제 중 오류가 발생했습니다.'
+      next(error)
+   }
+})
+
+// 상품 수정
 
 module.exports = router

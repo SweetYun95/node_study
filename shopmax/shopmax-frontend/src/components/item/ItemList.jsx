@@ -2,15 +2,39 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
 import DeleteIcon from '@mui/icons-material/Delete'
 import dayjs from 'dayjs'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { deleteItemsThunk, fetchItemsThunk } from '../../features/itemSlice'
+import { formatWithComma } from '../../utils/priceSet'
 
 function ItemList() {
+   const dispatch = useDispatch()
+   const navigate = useNavigate()
+   const { items, pagination, loading, error } = useSelector((state) => state.items)
+
    const [searchTerm, setSearchTerm] = useState('') // 검색어
    const [searchCategory, setSearchCategory] = useState('itemNm') // 검색 카테고리(상품명 or 상품설명)
    const [sellCategory, setSellCategory] = useState('') // SELL, SOLD_OUT
    const [searchSubmit, setSearchSubmit] = useState(false) // 검색버튼 클릭 상태
    const [page, setPage] = useState(1) // 페이지 번호
+
+   // 전체 상품 리스트 가져오기
+   useEffect(() => {
+      dispatch(fetchItemsThunk({ page, limit: 5, searchTerm, searchCategory, sellCategory }))
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [dispatch, page, sellCategory, searchSubmit]) // page, sellCategory, searchSubmit가 바뀔때 마다 useEffect가 실행되면서 상품리스트를 다시 불러온다
+   // searchTerm, searchCategory -> 상태가 바뀔때마다 실행되므로 제외. 따라서 eslint 주석으로 경고 방지
+
+   // 상품 삭제
+   const result = da
+   
+   if (result) { 
+      dispatch(deleteItemsThunk(id))
+         .unwrap().then(() => {
+         navigate(`/item`)
+      })
+   }
 
    // 판매 상태 변경
    const handleSellCategoryChange = (e) => {
@@ -36,6 +60,23 @@ function ItemList() {
       setPage(1)
    }
 
+   // 페이지 변경
+   const handlePageChange = (e, value) => {
+      setPage(value)
+   }
+
+   if (loading) {
+      return null //아무것도 보여주지 X
+   }
+
+   if (error) {
+      return (
+         <Typography variant="body1" align="center" color="error">
+            에러 발생: {error}
+         </Typography>
+      )
+   }
+
    return (
       <Box sx={{ p: 4 }}>
          {/* 등록버튼 */}
@@ -59,22 +100,42 @@ function ItemList() {
                   </TableRow>
                </TableHead>
                <TableBody>
-                  <TableRow>
-                     <TableCell align="center">-</TableCell>
-                     <TableCell align="center">-</TableCell>
-                     <TableCell align="center">-</TableCell>
-                     <TableCell align="center">-</TableCell>
-                     <TableCell align="center">-</TableCell>
-                     <TableCell align="center">-</TableCell>
-                  </TableRow>
+                  {items.length > 0 ? (
+                     items.map((item) => (
+                        <TableRow key={item.id}>
+                           <TableCell align="center">{item.id}</TableCell>
+                           <TableCell align="center">{item.itemNm}</TableCell>
+                           <TableCell align="center">{formatWithComma(String(item.price))}</TableCell>
+                           <TableCell align="center">{item.itemSellStatus}</TableCell>
+                           <TableCell align="center">{dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
+                           <TableCell align="center">
+                              <IconButton aria-label="delete">
+                                 <DeleteIcon onClick={() => handleDeleteThunk(item.id)} />
+                              </IconButton>
+                           </TableCell>
+                        </TableRow>
+                     ))
+                  ) : (
+                     <TableRow>
+                        <TableCell colSpan={6} align="center">
+                           등록된 상품이 없습니다.
+                        </TableCell>
+                     </TableRow>
+                  )}
                </TableBody>
             </Table>
          </TableContainer>
 
          {/* 페이징 */}
-         <Stack spacing={2} sx={{ mt: 3, mb: 3, alignItems: 'center' }}>
-            <Pagination />
-         </Stack>
+         {pagination && (
+            <Stack spacing={2} sx={{ mt: 3, mb: 3, alignItems: 'center' }}>
+               <Pagination
+                  count={pagination.totalPages} // 총 페이지 수
+                  page={page} // 현재 페이지
+                  onChange={handlePageChange} // 페이지 변경 핸들러
+               />
+            </Stack>
+         )}
 
          {/* 검색 및 필터 */}
          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, flexWrap: 'wrap', mt: 5 }}>
