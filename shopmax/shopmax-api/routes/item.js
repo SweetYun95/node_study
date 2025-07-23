@@ -4,7 +4,7 @@ const path = require('path')
 const fs = require('fs')
 const { Op } = require('sequelize')
 const { Item, Img } = require('../models')
-const { tracingChannel } = require('diagnostics_channel')
+const { isAdmin } = require('./middlewares')
 const router = express.Router()
 
 // uploads 폴더가 없을 경우 새로 생성
@@ -38,7 +38,7 @@ const upload = multer({
 })
 
 // 상품등록 localhost:8000/item/
-router.post('/', upload.array('img'), async (req, res, next) => {
+router.post('/', isAdmin, upload.array('img'), async (req, res, next) => {
    try {
       // 업로드된 파일 확인
       if (!req.files) {
@@ -178,26 +178,26 @@ router.get('/', async (req, res, next) => {
 })
 
 // 상품 삭제 localhost:8000/item/:id
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', isAdmin, async (req, res, next) => {
    try {
       const id = req.params.id // 상품 id
 
-      // 상품이 있는지 확인
-      const item = await Item.findByPk(id) // pk key 로 검색
+      // 상품이 존재하는지 확인
+      const item = await Item.findByPk(id) // pk 키로 검색
 
-      // 상품이 존재하지 않는 경우 확인
+      // 상품이 존재하지 않으면
       if (!item) {
-         const error = new Error(`상품을 찾을 수 없습니다.`)
+         const error = new Error('상품을 찾을 수 없습니다.')
          error.status = 404
          return next(error)
       }
 
-      // 상품삭제(연관된 이미지도 삭제 - CASCADE 설정)
+      // 상품삭제 (연관된 이미지도 삭제된다 - CASCADE 설정)
       await item.destroy()
 
       res.json({
          success: true,
-         message: `상품 삭제 완료`,
+         message: '상품이 성공적으로 삭제되었습니다.',
       })
    } catch (error) {
       error.status = 500
@@ -212,24 +212,24 @@ router.get('/:id', async (req, res, next) => {
       const id = req.params.id
 
       const item = await Item.findOne({
-         where: { id }, // 특정 상품 id 조회
+         where: { id }, // 특정 상품 id로 조회
          include: [
             {
-               model: Img, // 연관 이미지 포함
-               attributes: ['id', 'oriImgName', 'repImgYn'], // 특정 컬럼 선택
+               model: Img, // 연관된 이미지 포함
+               attributes: ['id', 'oriImgName', 'imgUrl', 'repImgYn'], //특정 컬럼만 선택
             },
          ],
       })
 
       if (!item) {
-         const error = new Error(`해당 상품을 찾을 수 없습니다.`)
+         const error = new Error('해당 상품을 찾을 수 없습니다.')
          error.status = 404
          return next(error)
       }
 
       res.json({
          success: true,
-         message: `상품 조회 완료`,
+         message: '상품 조회 성공',
          item,
       })
    } catch (error) {
@@ -240,16 +240,16 @@ router.get('/:id', async (req, res, next) => {
 })
 
 // 상품 수정 localhost:8000/item/:id
-router.put('/:id', upload.array('img'), async (req, res, next) => {
+router.put('/:id', isAdmin, upload.array('img'), async (req, res, next) => {
    try {
       const id = req.params.id
       const { itemNm, price, stockNumber, itemDetail, itemSellStatus } = req.body
 
-      // 상품존재확인
+      // 상품이 존재하는지 확인
       const item = await Item.findByPk(id)
 
       if (!item) {
-         const error = new Error(`해당 상품을 찾을 수 없습니다.`)
+         const error = new Error('해당 상품을 찾을 수 없습니다.')
          error.status = 404
          return next(error)
       }
@@ -262,7 +262,7 @@ router.put('/:id', upload.array('img'), async (req, res, next) => {
          itemSellStatus,
       })
 
-      // 수정할 이미지 있니?
+      // 수정할 이미지가 존재하는 경우
       if (req.files && req.files.length > 0) {
          // 기존 이미지 삭제
          await Img.destroy({ where: { itemId: id } })
@@ -284,11 +284,11 @@ router.put('/:id', upload.array('img'), async (req, res, next) => {
 
       res.json({
          success: true,
-         message: `상품과 이미지가 성공적으로 수정되었습니다.`,
+         message: '상품과 이미지가 성공적으로 수정되었습니다.',
       })
    } catch (error) {
       error.status = 500
-      error.message = '수정 중 오류가 발생했습니다.'
+      error.message = '상품 수정 중 오류가 발생했습니다.'
       next(error)
    }
 })

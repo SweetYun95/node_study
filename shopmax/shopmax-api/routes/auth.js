@@ -1,12 +1,13 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
-const passport = require(`passport`)
+const passport = require('passport')
 const User = require('../models/user')
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares')
 
 const router = express.Router()
 
 // 회원가입
-router.post(`/join`, async (req, res, next) => {
+router.post('/join', isNotLoggedIn, async (req, res, next) => {
    try {
       const { email, name, address, password } = req.body
 
@@ -24,9 +25,11 @@ router.post(`/join`, async (req, res, next) => {
       }
 
       // 이메일 중복 확인을 통과시 새로운 사용자 계정 생성
+
       // 비밀번호 암호화
-      const hash = await bcrypt.hash(password, 12)
-      // 새로운 사용자 생성(키값은 DB 컬럼명과 같게)
+      const hash = await bcrypt.hash(password, 12) // 12: salt(해시 암호화를 진행시 추가되는 임의의 데이터 주로 10 ~ 12 정도의 값이 권장됨)
+
+      // 새로운 사용자 생성
       const newUser = await User.create({
          email,
          name,
@@ -36,8 +39,8 @@ router.post(`/join`, async (req, res, next) => {
       })
 
       res.status(201).json({
-         succeess: true,
-         message: '회원가입 성공',
+         success: true,
+         message: '사용자가 성공적으로 등록되었습니다.',
          user: {
             id: newUser.id,
             name: newUser.name,
@@ -45,6 +48,7 @@ router.post(`/join`, async (req, res, next) => {
          },
       })
    } catch (error) {
+      // 에러발생시 미들웨어로 전달
       error.status = 500
       error.message = '회원가입 중 오류가 발생했습니다.'
       next(error)
@@ -52,7 +56,7 @@ router.post(`/join`, async (req, res, next) => {
 })
 
 // 로그인
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, async (req, res, next) => {
    passport.authenticate('local', (authError, user, info) => {
       if (authError) {
          // 로그인 인증 중 에러 발생시
@@ -69,7 +73,7 @@ router.post('/login', (req, res, next) => {
          return next(error) // 에러 미들웨어로 전달
       }
 
-      // 세션에 로그인 정보 저장
+      // 인증이 정상적으로 되고 사용자를 로그인 상태로 바꿈
       req.login(user, (loginError) => {
          if (loginError) {
             // 로그인 상태로 바꾸는 중 오류 발생시
@@ -94,7 +98,7 @@ router.post('/login', (req, res, next) => {
 })
 
 // 로그아웃
-router.get('/logout', (req, res) => {
+router.get('/logout', isLoggedIn, async (req, res, next) => {
    req.logout((logoutError) => {
       if (logoutError) {
          // 로그아웃 상태로 바꾸는 중 에러 발생시
@@ -105,7 +109,7 @@ router.get('/logout', (req, res) => {
 
       // 로그아웃 성공시 세션에 저장되어있던 사용자 id는 삭제된다
       // 로그아웃 성공시 response
-      res.status(200).json({
+      res.json({
          success: true,
          message: '로그아웃에 성공했습니다.',
       })
@@ -113,7 +117,7 @@ router.get('/logout', (req, res) => {
 })
 
 // 로그인 상태확인
-router.get('/status', (req, res) => {
+router.get('/status', async (req, res, next) => {
    try {
       if (req.isAuthenticated()) {
          // 로그인이 되었을때
