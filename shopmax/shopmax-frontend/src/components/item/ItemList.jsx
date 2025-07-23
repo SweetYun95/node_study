@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
-import { deleteItemsThunk, fetchItemsThunk } from '../../features/itemSlice'
+import { deleteItemThunk, fetchItemsThunk } from '../../features/itemSlice'
 import { formatWithComma } from '../../utils/priceSet'
 
 function ItemList() {
@@ -19,22 +19,29 @@ function ItemList() {
    const [searchSubmit, setSearchSubmit] = useState(false) // 검색버튼 클릭 상태
    const [page, setPage] = useState(1) // 페이지 번호
 
+   // 상품 삭제
+   const handleDeleteThunk = (id) => {
+      const result = confirm('해당 상품을 삭제하시겠습니까?')
+
+      if (result) {
+         dispatch(deleteItemThunk(id))
+            .unwrap()
+            .then(() => {
+               navigate('/items/createlist') // 삭제 후 리스트로 이동
+            })
+            .catch((error) => {
+               console.error('삭제 에러:', error)
+               alert('삭제에 실패했습니다.' + error)
+            })
+      }
+   }
+
    // 전체 상품 리스트 가져오기
    useEffect(() => {
       dispatch(fetchItemsThunk({ page, limit: 5, searchTerm, searchCategory, sellCategory }))
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [dispatch, page, sellCategory, searchSubmit]) // page, sellCategory, searchSubmit가 바뀔때 마다 useEffect가 실행되면서 상품리스트를 다시 불러온다
    // searchTerm, searchCategory -> 상태가 바뀔때마다 실행되므로 제외. 따라서 eslint 주석으로 경고 방지
-
-   // 상품 삭제
-   const result = da
-   
-   if (result) { 
-      dispatch(deleteItemsThunk(id))
-         .unwrap().then(() => {
-         navigate(`/item`)
-      })
-   }
 
    // 판매 상태 변경
    const handleSellCategoryChange = (e) => {
@@ -104,7 +111,11 @@ function ItemList() {
                      items.map((item) => (
                         <TableRow key={item.id}>
                            <TableCell align="center">{item.id}</TableCell>
-                           <TableCell align="center">{item.itemNm}</TableCell>
+                           <TableCell align="center">
+                              <Link href={`/items/edit/${item.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                 {item.itemNm}
+                              </Link>
+                           </TableCell>
                            <TableCell align="center">{formatWithComma(String(item.price))}</TableCell>
                            <TableCell align="center">{item.itemSellStatus}</TableCell>
                            <TableCell align="center">{dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>

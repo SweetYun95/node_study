@@ -2,14 +2,15 @@ import { TextField, Button, Box, MenuItem, Select, InputLabel, FormControl } fro
 import { useState } from 'react'
 import { formatWithComma, stripComma } from '../../utils/priceSet'
 
-function ItemCreateForm({ onCreateSubmit }) {
-   const [imgUrls, setImgUrls] = useState([]) // 이미지 경로(여러개 저장)
+function ItemEditForm({ onEditSubmit, initialValues = {} }) {
+   // initialValues = item 객체
+   const [imgUrls, setImgUrls] = useState(initialValues.Imgs.map((img) => import.meta.env.VITE_APP_API_URL + img.imgUrl)) // 이미지 경로(여러개 저장)
    const [imgFiles, setImgFiles] = useState([]) // 이미지 파일 객체(여러개 저장)
-   const [itemNm, setItemNm] = useState('') // 상품명
-   const [price, setPrice] = useState('') // 가격
-   const [stockNumber, setStockNumber] = useState('') // 재고
-   const [itemSellStatus, setItemSellStatus] = useState('SELL') // 판매상태
-   const [itemDetail, setItemDetail] = useState('') // 상품설명
+   const [itemNm, setItemNm] = useState(initialValues.itemNm) // 상품명
+   const [price, setPrice] = useState(String(initialValues.price)) // 가격
+   const [stockNumber, setStockNumber] = useState(initialValues.stockNumber) // 재고
+   const [itemSellStatus, setItemSellStatus] = useState(initialValues.itemSellStatus) // 판매상태
+   const [itemDetail, setItemDetail] = useState(initialValues.itemDetail) // 상품설명
 
    // 이미지 미리보기
    const handleImageChange = (e) => {
@@ -67,10 +68,10 @@ function ItemCreateForm({ onCreateSubmit }) {
          return
       }
 
-      if (imgFiles.length === 0) {
-         alert('이미지 최소 1개 이상 업로드 하세요.')
-         return
-      }
+      // if (imgFiles.length === 0) {
+      //    alert('이미지 최소 1개 이상 업로드 하세요.')
+      //    return
+      // }
 
       const formData = new FormData()
       formData.append('itemNm', itemNm)
@@ -85,8 +86,8 @@ function ItemCreateForm({ onCreateSubmit }) {
          formData.append('img', encodedFile)
       })
 
-      // 상품등록 함수 실행
-      onCreateSubmit(formData)
+      // 상품수정 함수 실행
+      onEditSubmit(formData)
    }
 
    // 가격에서 콤마 제거 / 숫자가 아닌 값을 거른 후 => price state에 저장
@@ -183,12 +184,12 @@ function ItemCreateForm({ onCreateSubmit }) {
          {/* 상품설명 입력 필드 */}
          <TextField label="상품설명" variant="outlined" fullWidth multiline rows={4} value={itemDetail} onChange={(e) => setItemDetail(e.target.value)} sx={{ mt: 2 }} />
 
-         {/* 등록 버튼 */}
+         {/* 수정 버튼 */}
          <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-            등록하기
+            수정하기
          </Button>
       </Box>
    )
 }
 
-export default ItemCreateForm
+export default ItemEditForm
