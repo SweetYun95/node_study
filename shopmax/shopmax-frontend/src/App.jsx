@@ -11,6 +11,7 @@ import ItemListPage from './pages/ItemListPage'
 import ItemCreatePage from './pages/ItemCreatePage'
 import ItemEditPage from './pages/ItemEditPage'
 import ItemSellDetailPage from './pages/ItemSellDetailPage'
+import MyOrderListPage from './pages/MyOrderListPage'
 import Footer from './components/shared/Footer'
 
 import './styles/common.css'
@@ -45,6 +46,9 @@ function App() {
 
             {/* 상품 상세페이지 */}
             <Route path="/items/detail/:id" element={<ItemSellDetailPage />} />
+
+            {/* 주문내역 페이지 */}
+            <Route path="/myorderlist" element={<MyOrderListPage/> } />
          </Routes>
          <Footer />
       </>
