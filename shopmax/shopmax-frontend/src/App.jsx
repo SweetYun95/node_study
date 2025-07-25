@@ -1,18 +1,19 @@
-import './styles/common.css'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 
+import { checkAuthStatusThunk } from './features/authSlice'
 import Navbar from './components/shared/Navbar'
-import Footer from './components/shared/Footer'
 import Home from './pages/Home'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
-import ItemCreatePage from './pages/ItemCreatePage'
-
-import { checkAuthStatusThunk } from './features/authSlice'
 import ItemListPage from './pages/ItemListPage'
+import ItemCreatePage from './pages/ItemCreatePage'
 import ItemEditPage from './pages/ItemEditPage'
+import ItemSellDetailPage from './pages/ItemSellDetailPage'
+import Footer from './components/shared/Footer'
+
+import './styles/common.css'
 
 function App() {
    const dispatch = useDispatch()
@@ -41,6 +42,9 @@ function App() {
 
             {/* 상품수정 */}
             <Route path="/items/edit/:id" element={<ItemEditPage />} />
+
+            {/* 상품 상세페이지 */}
+            <Route path="/items/detail/:id" element={<ItemSellDetailPage />} />
          </Routes>
          <Footer />
       </>
