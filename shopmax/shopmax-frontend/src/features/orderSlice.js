@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createOrder, getOrders } from '../api/orderApi'
+import { createOrder, getOrders, cancelOrder, deleteOrder } from '../api/orderApi'
 
 // 주문하기
 export const createOrderThunk = createAsyncThunk('order/createOrder', async (orderData, { rejectWithValue }) => {
@@ -13,17 +13,36 @@ export const createOrderThunk = createAsyncThunk('order/createOrder', async (ord
    }
 })
 
-// 주문리스트
-export const getOdersThunk = createAsyncThunk('order/getOders', async (orderData, { rejectWithValue }) => {
+// 주문목록 가져오기
+export const getOrdersThunk = createAsyncThunk('order/getOrders', async (data, { rejectWithValue }) => {
    try {
-      // orderData: 주문 상품 목록 데이터
-      // orderData = { items: [{itemId: 1, count: 2 }, {itemId: 2, count: 1 }] }
-      const response = await getOrders(orderData)
+      const response = await getOrders(data)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message)
    }
 })
+
+// 주문 취소
+export const cancelOrderThunk = createAsyncThunk('order/cancelOrder', async (id, { rejectWithValue }) => {
+   try {
+      await cancelOrder(id)
+      return id
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message)
+   }
+})
+
+// 주문 삭제
+export const deleteOrderThunk = createAsyncThunk('order/deleteOrder', async (id, { rejectWithValue }) => {
+   try {
+      await deleteOrder(id)
+      return id
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message)
+   }
+})
+
 const orderSlice = createSlice({
    name: 'order',
    initialState: {
@@ -47,17 +66,41 @@ const orderSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         //주문리스트
-         .addCase(getOdersThunk.pending, (state) => {
+         //주문목록
+         .addCase(getOrdersThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
-         .addCase(getOdersThunk.fulfilled, (state, action) => {
+         .addCase(getOrdersThunk.fulfilled, (state, action) => {
             state.loading = false
             state.orders = action.payload.orders
             state.pagination = action.payload.pagination
          })
-         .addCase(getOdersThunk.rejected, (state, action) => {
+         .addCase(getOrdersThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         //주문취소
+         .addCase(cancelOrderThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(cancelOrderThunk.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(cancelOrderThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         //주문삭제
+         .addCase(deleteOrderThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(deleteOrderThunk.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(deleteOrderThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

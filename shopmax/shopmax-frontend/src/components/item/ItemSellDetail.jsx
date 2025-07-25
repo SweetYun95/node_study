@@ -33,7 +33,7 @@ function ItemSellDetail() {
    const handleBuy = () => {
       dispatch(
          createOrderThunk({
-            item: [
+            items: [
                {
                   itemId: id, // 상품 id
                   count, // 상품수량

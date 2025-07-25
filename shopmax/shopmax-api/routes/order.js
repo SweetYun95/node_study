@@ -188,4 +188,87 @@ router.get('/list', isLoggedIn, async (req, res, next) => {
    }
 })
 
+// 주문 취소 localhost:8000/order/cancel/:id
+router.post('/cancel/:id', isLoggedIn, async (req, res, next) => {
+   try {
+      const transaction = await sequelize.transaction()
+
+      const id = req.params.id // order id
+      const order = await Order.findByPk(id, {
+         include: [
+            {
+               model: OrderItem,
+               include: [{ model: Item }],
+            },
+         ],
+      })
+
+      // 주문내역이 없다면
+      if (!order) {
+         const error = new Error('주문내역이 존재하지 않습니다.')
+         error.status = 404
+         return next(error)
+      }
+
+      // 이미 취소된 주문이라면
+      if (order.orderStatus === 'CANCEL') {
+         const error = new Error('이미 취소된 주문입니다.')
+         error.status = 400
+         return next(error)
+      }
+
+      // 1. 재고 복구
+      for (const orderItem of order.OrderItems) {
+         const product = orderItem.Item
+         product.stockNumber += orderItem.count // 주문한 갯수 만큼 다시 재고에 더해줌
+         await product.save({ transaction }) //트랜잭션 사용
+      }
+
+      // 2. 주문 상태 변경
+      order.orderStatus = 'CANCEL'
+      await order.save({ transaction }) // 트랜잭션 사용
+
+      await transaction.commit() // 트랜잭션 커밋
+
+      res.json({
+         success: true,
+         message: '주문이 성공적으로 취소되었습니다.',
+      })
+   } catch (error) {
+      await transaction.rollback() // 트랜잭션 롤백
+
+      error.status = 500
+      error.message = '주문 취소 중 오류가 발생했습니다.'
+      next(error)
+   }
+})
+
+// 주문 삭제 localhost:8000/order/delete/:id
+router.delete('/delete/:id', isLoggedIn, async (req, res, next) => {
+   try {
+      const id = req.params.id // order id
+
+      const order = await Order.findByPk(id)
+
+      // 주문내역이 없다면
+      if (!order) {
+         const error = new Error('주문내역이 존재하지 않습니다.')
+         error.status = 404
+         return next(error)
+      }
+
+      // 주문삭제(연관된 OrderItem도 삭제됨 - CASCADE 설정)
+      await Order.destroy({ where: { id: order.id } })
+
+      res.json({
+         success: true,
+         message: '주문 내역이 성공적으로 삭제되었습니다.',
+      })
+   } catch (error) {
+      error.status = 500
+      error.message = '주문 삭제 중 오류가 발생했습니다.'
+      next(error)
+   }
+})
+
 module.exports = router
