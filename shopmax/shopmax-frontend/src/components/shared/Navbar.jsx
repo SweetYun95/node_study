@@ -17,6 +17,7 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
+
 import { logoutUserThunk } from '../../features/authSlice'
 
 function Navbar({ isAuthenticated, user }) {
@@ -191,6 +192,13 @@ function Navbar({ isAuthenticated, user }) {
                               <Typography sx={{ textAlign: 'center' }}>1:1 채팅 문의</Typography>
                            </Link>
                         </MenuItem>
+                        {user && user.role === 'ADMIN' && (
+                           <MenuItem>
+                              <Link to="/token" style={{ color: 'black', textDecoration: 'none' }}>
+                                 <Typography sx={{ textAlign: 'center' }}>Token 발급</Typography>
+                              </Link>
+                           </MenuItem>
+                        )}
                      </Menu>
                   </Box>
                ) : (
