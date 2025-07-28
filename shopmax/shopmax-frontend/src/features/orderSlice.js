@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createOrder, getOrders, cancelOrder, deleteOrder } from '../api/orderApi'
+import { createOrder, getOrders, cancelOrder, deleteOrder, getChartOrders } from '../api/orderApi'
 
 // 주문하기
 export const createOrderThunk = createAsyncThunk('order/createOrder', async (orderData, { rejectWithValue }) => {
@@ -38,6 +38,17 @@ export const deleteOrderThunk = createAsyncThunk('order/deleteOrder', async (id,
    try {
       await deleteOrder(id)
       return id
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message)
+   }
+})
+
+// 차트용 주문목록 가져오기
+export const getChartOrdersThunk = createAsyncThunk('order/getChartOrders', async (_, { rejectWithValue }) => {
+   try {
+      const response = await getChartOrders()
+      console.log(response.data.orders)
+      return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message)
    }
@@ -101,6 +112,19 @@ const orderSlice = createSlice({
             state.loading = false
          })
          .addCase(deleteOrderThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         //차트용 주문목록
+         .addCase(getChartOrdersThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getChartOrdersThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.orders = action.payload.orders
+         })
+         .addCase(getChartOrdersThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

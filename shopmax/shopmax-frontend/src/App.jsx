@@ -13,6 +13,8 @@ import ItemEditPage from './pages/ItemEditPage'
 import ItemSellDetailPage from './pages/ItemSellDetailPage'
 import MyOrderListPage from './pages/MyOrderListPage'
 import TokenPage from './pages/TokenPage'
+import ChatPage from './pages/ChatPage'
+import ChartPage from './pages/ChartPage'
 import Footer from './components/shared/Footer'
 
 import './styles/common.css'
@@ -53,6 +55,12 @@ function App() {
 
             {/* 토큰 발급 페이지 */}
             <Route path="/token" element={<TokenPage />} />
+
+            {/* 채팅 페이지 */}
+            <Route path="/chat" element={<ChatPage />} />
+
+            {/* 차트 페이지 */}
+            <Route path="/chart" element={<ChartPage />} />
          </Routes>
          <Footer />
       </>

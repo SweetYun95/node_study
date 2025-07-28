@@ -50,10 +50,11 @@ exports.isAdmin = (req, res, next) => {
 exports.verifyToken = (req, res, next) => {
    try {
       // 프론트엔드에서 전달한 토큰
-      console.log(`req.headers.authorization: ${req.headers.authorization}`)
+      console.log(`🔑 req.headers.authorization: `, req.headers.authorization)
 
       // 토큰 검증
       req.decoed = jwt.verify(req.headers.authorization, process.env.JWT_SECRET)
+
       return next() // 다음 미들웨어 이동
    } catch (error) {
       // 토큰 유효기간 초과
@@ -69,3 +70,4 @@ exports.verifyToken = (req, res, next) => {
       return next(error)
    }
 }
+

@@ -40,11 +40,22 @@ export const cancelOrder = async (id) => {
 
 // 주문 삭제
 export const deleteOrder = async (id) => {
-  try {
-     const response = await shopmaxApi.delete(`/order/delete/${id}`)
-     return response
-  } catch (error) {
-     console.error(`API Request 오류: ${error}`)
-     throw error
-  }
+   try {
+      const response = await shopmaxApi.delete(`/order/delete/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error}`)
+      throw error
+   }
+}
+
+// 주문목록 - 차트용
+export const getChartOrders = async () => {
+   try {
+      const response = await shopmaxApi.get(`order/chartlist`)
+      return response
+   } catch (error) {
+        console.error(`API Request 오류: ${error}`)
+        throw error
+   }
 }

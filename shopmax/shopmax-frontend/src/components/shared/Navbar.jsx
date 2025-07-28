@@ -1,16 +1,6 @@
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import Menu from '@mui/material/Menu'
-import MenuIcon from '@mui/icons-material/Menu'
-import Container from '@mui/material/Container'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import Tooltip from '@mui/material/Tooltip'
-import MenuItem from '@mui/material/MenuItem'
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material'
 // import { Link as MUILink } from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
 // https://mui.com/material-ui/react-app-bar/#app-bar-with-responsive-menu
 
@@ -96,11 +86,18 @@ function Navbar({ isAuthenticated, user }) {
                      sx={{ display: { xs: 'block', md: 'none' } }}
                   >
                      {user && user.role === 'ADMIN' && (
-                        <MenuItem>
-                           <Link to="/items/createlist" style={{ color: 'black', textDecoration: 'none' }}>
-                              <Typography sx={{ textAlign: 'center' }}>상품등록</Typography>
-                           </Link>
-                        </MenuItem>
+                        <>
+                           <MenuItem>
+                              <Link to="/items/createlist" style={{ color: 'black', textDecoration: 'none' }}>
+                                 <Typography sx={{ textAlign: 'center' }}>상품등록</Typography>
+                              </Link>
+                           </MenuItem>
+                           <MenuItem>
+                              <Link to="/chart" style={{ color: 'black', textDecoration: 'none' }}>
+                                 <Typography sx={{ textAlign: 'center' }}>통계</Typography>
+                              </Link>
+                           </MenuItem>
+                        </>
                      )}
                      <MenuItem>
                         <Typography sx={{ textAlign: 'center' }}>상품구매</Typography>
@@ -134,11 +131,18 @@ function Navbar({ isAuthenticated, user }) {
                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                   {/* 관리자만 볼 수 있도록 */}
                   {user && user.role === 'ADMIN' && (
-                     <MenuItem>
-                        <Link to="/items/createlist" style={{ color: 'black', textDecoration: 'none' }}>
-                           <Typography sx={{ textAlign: 'center' }}>상품등록</Typography>
-                        </Link>
-                     </MenuItem>
+                     <>
+                        <MenuItem>
+                           <Link to="/items/createlist" style={{ color: 'black', textDecoration: 'none' }}>
+                              <Typography sx={{ textAlign: 'center' }}>상품등록</Typography>
+                           </Link>
+                        </MenuItem>
+                        <MenuItem>
+                           <Link to="/chart" style={{ color: 'black', textDecoration: 'none' }}>
+                              <Typography sx={{ textAlign: 'center' }}>통계</Typography>
+                           </Link>
+                        </MenuItem>
+                     </>
                   )}
                   <MenuItem>
                      <Typography sx={{ textAlign: 'center' }}>상품구매</Typography>
